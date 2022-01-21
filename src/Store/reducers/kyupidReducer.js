@@ -3,7 +3,8 @@ import { FETCH_USERS, FETCH_AREA } from '../actionTypes';
 const initialState = {
     revenue_data: [],
     general_data: [],
-    area_data : []
+    area_code_data : [],
+    areas : {}
 }
 
 const KyupidReducer = (state = initialState, action) => {
@@ -17,7 +18,8 @@ const KyupidReducer = (state = initialState, action) => {
         case FETCH_AREA:
             return {
                 ...state,
-                area_data : action.payload
+                area_code_data : action.payload.area_code_data,
+                areas : action.payload.areas
             }
         default: return state
     }

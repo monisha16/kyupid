@@ -1,0 +1,57 @@
+.kyupid-container{
+    display: flex;
+    flex-direction: column;
+}
+
+
+// .geopopup {
+//   position: absolute;
+//   width: 250px;
+//   background: var(--color-secondary);
+//   top: 0;
+//   left: 0;
+//   box-shadow: 0 15px 15px #1c203b3b;
+//   border-radius: 5px;
+//   .popup-header {
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+//     background: var(--color-primary);
+//     padding: 10px;
+//     border-radius: 5px 5px 0 0;
+//     .header-icon {
+//       padding: 10px;
+//       background: var(--color-primary-light);
+//       border-radius: 50%;
+//     }
+//     .text-area {
+//       margin: 0 10px;
+//       overflow: hidden;
+//       h4 {
+//         white-space: nowrap;
+//         overflow: hidden;
+//         text-overflow: ellipsis;
+//       }
+//       span {
+//         opacity: 0.5;
+//       }
+//     }
+//   }
+//   .content-area {
+//     display: flex;
+//     flex-direction: column;
+//     .content-item {
+//       display: flex;
+//       flex-direction: row;
+//       align-items: center;
+//       justify-content: space-between;
+//       padding: 15px;
+//       &:nth-child(odd) {
+//         background: #0f1b3133;
+//       }
+//       &:last-child {
+//         border-radius: 0 0 5px 5px;
+//       }
+//     }
+//   }
+// }

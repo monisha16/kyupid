@@ -20,7 +20,7 @@ export const fetch_area = () => async(dispatch) => {
                 });
                 dispatch({
                     type: FETCH_AREA,
-                    payload: areaData,
+                    payload: { areaCodeData: areaData, areas: res.data},
                 })
             }
         })

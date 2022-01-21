@@ -1,0 +1,26 @@
+.header{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 2rem;
+        background-color: #000000;
+        opacity: .3;
+        & > *{
+            margin: .5rem;
+        }
+
+        &__logo{
+            font-size: large;
+            color: pink;
+        }
+        &__options{
+            display: flex;
+            width: 12rem;
+            justify-content: space-around;
+            & >*{
+                color: white;
+            }
+        }
+    }
