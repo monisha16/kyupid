@@ -1,21 +1,19 @@
-import React,{useState} from "react";
+import React from "react";
 import styles from './header.module.scss';
 
 const Header = (props) =>{
-    
     return(
         <div className={styles['header']}>
-            <div className={styles['header__logo']}> Kyupid </div>
             <div className={styles['header__options']}>
                 <div
-                    style={props.mapType === 'revenue' ? { borderBottom: '1.5px solid green' } : { borderBottom: 'transparent' }}
-                    onClick={() => props.setMapType('revenue')}
+                    style={props.mapType === 'pro' ? { color: '#F2F12D' } : { color: '#a3a3a33b' }}
+                    onClick={() => props.setMapType('pro')}
                 >
                     Revenue Data
-                </div>
+                </div> 
                 <div
-                    style={props.mapType === 'user' ? { borderBottom: '1.5px solid green' } : { borderBottom: 'transparent' }}
-                    onClick={() => props.setMapType('user')}
+                    style={props.mapType === 'general' ? { color: '#94f80b' } : { color: '#a3a3a3' }}
+                    onClick={() => props.setMapType('general')}
                 >
                     User Data
                 </div>
