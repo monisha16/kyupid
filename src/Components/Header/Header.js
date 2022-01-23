@@ -10,9 +10,9 @@ const Header = (props) =>{
                     onClick={() => props.setMapType('pro')}
                 >
                     Revenue Data
-                </div> 
+                </div>
                 <div
-                    style={props.mapType === 'general' ? { color: '#94f80b' } : { color: '#a3a3a3' }}
+                    style={props.mapType === 'general' ? { color: '#94f80b' } : { color: '#a3a3a33b' }}
                     onClick={() => props.setMapType('general')}
                 >
                     User Data
