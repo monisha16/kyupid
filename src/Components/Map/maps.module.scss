@@ -1,0 +1,58 @@
+.map-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+// .sidebarStyle {
+//   display: inline-block;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   margin: 12px;
+//   background-color: #404040;
+//   color: #ffffff;
+//   z-index: 1 !important;
+//   padding: 6px;
+//   font-weight: bold;
+// }
+
+.popup{
+
+  position: absolute;
+  width: max-content;
+  background-color:  #fff;
+  top: 0;
+  left: 0;
+  box-shadow: 0 15px 15px #1c203b3b;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #191a1a;
+ 
+  & > *{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: -webkit-fill-available;
+  }
+  
+  &__heading{
+    
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.25rem;
+    text-transform: lowercase;
+
+    
+  }
+  &__text{
+    border-top: 1.5px solid #191a1a91;
+    padding: .5rem;
+    font-size: .7rem;
+    
+  }
+}
