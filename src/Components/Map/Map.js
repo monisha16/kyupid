@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactMapGL, { Source, Layer} from "react-map-gl";
+import mapboxgl from 'mapbox-gl';
 import Dashboard from '../Dashboard/Dashboard';
+
+// The following is required to stop "npm build" from transpiling mapbox code.
+// notice the exclamation point in the import.
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 const Map = (props) => {
     const [viewport, setViewport] = useState({
@@ -136,7 +143,7 @@ const Map = (props) => {
     let mapData;
     mapData = props.mapType === 'pro' ?
         revenueData : generalData
-        
+
   const generalLayerStyle = {
     id: "area",
     type: "fill",
