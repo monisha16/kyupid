@@ -21,18 +21,13 @@ const Map = (props) => {
         pitch: 40,
         bearing: 340,  
     });
-    const [highlightArea, setHighlightArea] = useState(false)
     const [revenueData, setRevenueData] =  useState();
     const [generalData, setGeneralData] = useState();
     const [areas, setAreas] = useState();
     const [showPopup, togglePopup] = useState(false);
-    // const [popData, setPopData] = useState(null);
     const [regionalDash, setRegionalDash] = useState(null);
 
-    
-
     useEffect(() => {
-
         (async function(){
             let revenueData = {}; 
             let generalData = {}; 
@@ -147,52 +142,45 @@ const Map = (props) => {
     mapData = props.mapType === 'pro' ?
         revenueData : generalData
 
-  const generalLayerStyle = {
-    id: "area",
-    type: "fill",
-    paint: {
+    const generalLayerStyle = {
+        id: "area",
+        type: "fill",
+        paint: {
         // "fill-opacity": 0.7,
-        "fill-outline-color": "rgb(52,51,50)", //#191a1a
+        "fill-outline-color": "rgb(52,51,50)", 
         'fill-color': {
             property: 'totalGeneralUsers',
             stops: [
                 [90,"#94f80b"],
                 [120,"#93ff00"],
                 [150,"#75e41c"],
-                [170,'#54c527'],
-                [200,"#40b02a"],
-                [230,"#2c9b2a"],
-                [250,"#198729"],
-                [280,"#047326"]
+                [180,'#54c527'],
+                [220,"#40b02a"],
+                [250,"#2c9b2a"],
+                [280,"#198729"],
+                [300,"#047326"]
             ]
-        }
-    }
-  };
+        }}
+    };
     const proLayerStyle = {
         id: "area",
         type: "fill",
         paint: {
             // "fill-opacity": 0.7,
-            "fill-outline-color": "rgb(52,51,50)", //#191a1a
+            "fill-outline-color": "rgb(52,51,50)", 
             'fill-color': {
-                    property : 'totalProUsers',
-                    stops:[
-                   [ 0,
-                    '#F2F12D'],
-                    [50,
-                    '#EED322'],
-                   [ 70,
-                    '#DA9C20'],
-                    [120,
-                    '#B86B25'],
-                    [160,
-                    '#8B4225'],
-                    [260,
-                    '#723122']
-                    ]
+                property : 'totalProUsers',
+                stops:  [
+                        [0,'#F2F12D'],
+                        [50,'#EED322'],
+                        [80,'#DA9C20'],
+                        [120,'#B86B25'],
+                        [160,'#8B4225'],
+                        [200,'#723122'],
+                        [260,'#fc3401']
+                ]
             }
         },
-        
     };
 
     const highlightLayerStyle = {
@@ -200,8 +188,6 @@ const Map = (props) => {
         type: "fill",
         paint: {
             "fill-opacity": .4,
-            // "fill-outline-color": "rgb(52,51,50)", //#191a1a
-            // 'fill-color':  '#a8a8a8',
             'fill-color': 'white',
         },
     };
@@ -214,13 +200,13 @@ const Map = (props) => {
     const filter = useMemo(() => ['in', 'area_id', selectedArea], [selectedArea]);
 
 
-  return (
-      <>
+    return (
+    <>
     <ReactMapGL
         doubleClickZoom={false}
-        {...viewport}
         getCursor={getCursor}
         dragRotate={false}
+        {...viewport}
         onViewportChange={(newviewport) => setViewport(newviewport)}
         mapStyle={"mapbox://styles/mapbox/dark-v9"}
         mapboxApiAccessToken={
@@ -228,8 +214,8 @@ const Map = (props) => {
         }
 
         onHover={(e) => {
-            if (e?.features[0]?.properties?.area_id) {
-
+            if (e?.features[0]?.properties?.area_id) 
+            {
                 let area_id = e.features[0].properties.area_id;
                 setRegionalDash({
                     female: mapData[area_id].female,
@@ -240,28 +226,22 @@ const Map = (props) => {
                     areaName: e.features[0].properties.name,
                     revPercentage: mapData[area_id].revPercentage,
                     area_id: area_id,
-                })
-
-                setHighlightArea(true);
-
+                });
                 togglePopup(true);
             }
-
             else {
-                setHighlightArea(false);
                 togglePopup(false);
             }
         }}
     >
-      {areas && <Source id="my-data" type="geojson" data={areas}>
-        {props.mapType === "pro" ? <Layer {...proLayerStyle}  />
-        : 
-            <Layer {...generalLayerStyle}  />
+        {areas && 
+            <Source id="my-data" type="geojson" data={areas}>
+                {props.mapType === "pro" ? <Layer {...proLayerStyle}  />
+                    : <Layer {...generalLayerStyle}  />
+                }
+                {showPopup && <Layer {...highlightLayerStyle} filter={filter} />}
+            </Source>
         }
-        {highlightArea && <Layer {...highlightLayerStyle} filter={filter} />}
-          
-        </Source>
-      }
     
     </ReactMapGL>
         {showPopup && regionalDash && <Dashboard type="region" mapType={props.mapType} data={regionalDash} />}

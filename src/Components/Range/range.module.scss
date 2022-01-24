@@ -1,0 +1,27 @@
+.color-container{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    position: fixed;
+    bottom: 2rem;
+    right: 0.5rem;
+    z-index: 2;
+    align-items: baseline;
+}
+.range-row{
+    display: flex;
+    flex-direction: row;
+    z-index:2;
+    height:1.5rem;
+    &__color{
+        width:1rem;
+    }
+    &__number{
+        font-size: 0.9rem;
+        color: #a8a8a8;
+        padding-left: 0.25rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+}
