@@ -1,28 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { fetch_users} from '../../Store/actions/kyupidAction';
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import ReactMapGL, { Source, Layer} from "react-map-gl";
 import Dashboard from '../Dashboard/Dashboard';
 
 const Map = (props) => {
-    const dispatch = useDispatch();
-    useEffect(()=>{
-        dispatch(fetch_users());
-    })
-    const { revenueData, generalData } = useSelector((state) => {
-        const states = {
-            revenueData : state.kyupid.revenue_data,
-            generalData: state.kyupid.general_data
-        }
-        return states;
-    }); 
-
-    let mapData;
-    mapData = props.mapType === 'pro' ? 
-         revenueData :  generalData
-    
-    
     const [viewport, setViewport] = useState({
         longitude: 77.47,
         latitude: 12.89,
@@ -33,6 +14,8 @@ const Map = (props) => {
         pitch: 40,
         bearing: 340,        
     });
+    const [revenueData, setRevenueData] =  useState();
+    const [generalData, setGeneralData] = useState();
     const [areas, setAreas] = useState();
     const [showPopup, togglePopup] = useState(false);
     // const [popData, setPopData] = useState(null);
@@ -41,46 +24,108 @@ const Map = (props) => {
     useEffect(() => {
 
         (async function(){
-            let revenueAreaData = {}; 
-            let generalAreaData = {}; 
+            let revenueData = {}; 
+            let generalData = {}; 
             await axios.get("https://kyupid-api.vercel.app/api/users")
             .then(res=>{
                 let allUsers = res.data.users;
                 let proUsers = allUsers.filter(user => {
                     return user.is_pro_user
                 });
-                    allUsers.forEach((user) => {
-                        if (!(user.area_id in generalAreaData)) {
-                            generalAreaData[user.area_id] =
-                            {
-                                "totalUsers": 0
-                            };
-                        }
-                        else {
-                            generalAreaData[user.area_id]["totalUsers"]++;
-                        }
-                    });
 
-                    proUsers.forEach((user) => {
-                        if (!(user.area_id in revenueAreaData)) {
-                            revenueAreaData[user.area_id] =
-                            {
-                                "totalUsers": 0
-                            };
-                        }
-                        else {
-                            revenueAreaData[user.area_id]["totalUsers"]++;
-                        }
-                    });
+                //total info for General Map
+                let totalUsers = allUsers.length;
+                let totalMaleUsers = allUsers.filter(user => {
+                    return user.gender === 'M'
+                }).length;
+                let totalFemaleUsers = allUsers.filter(user => {
+                    return user.gender === 'F'
+                }).length;
+                let totalMatches = allUsers.filter(user => {
+                    return user.total_matches
+                }).length;
+
+                //total info for Revenue Map
+                let totalProUsers = proUsers.length;
+                let totalMaleProUsers = proUsers.filter(user => {
+                    return user.gender === 'M'
+                }).length;
+                let totalFemaleProUsers = proUsers.filter(user => {
+                    return user.gender === 'F'
+                }).length;
+                let totalProMatches = proUsers.filter(user => {
+                    return user.total_matches
+                }).length;
+                let totalRevPercentage = ((totalProUsers / totalUsers) * 100).toFixed(1);
+
+                allUsers.forEach((user) => {
+                    if (!(user.area_id in generalData)) {
+                        generalData[user.area_id] =
+                        {
+                            "totalUsers": 0,
+                            "male": 0,
+                            "female": 0,
+                            "total_matches": 0
+                        };
+                    }
+                    else {
+                        generalData[user.area_id]["totalUsers"]++;
+
+                        if (user.gender === 'M') generalData[user.area_id]["male"]++;
+                        else generalData[user.area_id]["female"]++;
+
+                        if (user.total_matches) generalData[user.area_id]["total_matches"]++;
+                    }
+                });
+                proUsers.forEach((user) => {
+                    if (!(user.area_id in revenueData)) {
+                        revenueData[user.area_id] =
+                        {
+                            "totalUsers": 0,
+                            "male": 0,
+                            "female": 0,
+                            "revPercentage": 0,
+                            "total_matches": 0,
+                        };
+                    }
+                    else {
+                        revenueData[user.area_id]["totalUsers"] = revenueData[user.area_id]["totalUsers"] + 1;
+
+                        if (user.gender === 'M') revenueData[user.area_id]["male"]++;
+                        else revenueData[user.area_id]["female"]++;
+
+                        revenueData[user.area_id]["revPercentage"] = ((revenueData[user.area_id]["totalUsers"] / proUsers.length) * 100).toFixed(2);
+
+                        if (user.total_matches) revenueData[user.area_id]["total_matches"]++;
+                    }
+
+                });
+                revenueData[0] = {
+                    "totalUsers": totalProUsers,
+                    "male": totalMaleProUsers,
+                    "female": totalFemaleProUsers,
+                    "total_matches": totalProMatches,
+                    "totalRevPercentage": totalRevPercentage,
+                }
+                generalData[0] = {
+                    "totalUsers": totalUsers,
+                    "male": totalMaleUsers,
+                    "female": totalFemaleUsers,
+                    "total_matches": totalMatches
+                }
+
+                setRevenueData(revenueData);
+                setGeneralData(generalData);
             })
 
             await fetch("https://kyupid-api.vercel.app/api/areas")
                 .then((res) => res.json())
                 .then((new_areas) => {
                     new_areas["features"].forEach((area) => {
-                    area["properties"]["totalProUsers"] = revenueAreaData[area.properties.area_id]["totalUsers"];
-                    area["properties"]["totalGeneralUsers"] = generalAreaData[area.properties.area_id]["totalUsers"];
-                    })
+                    area["properties"]["totalProUsers"] = revenueData[area.properties.area_id]["totalUsers"];
+                    area["properties"]["totalGeneralUsers"] = generalData[area.properties.area_id]["totalUsers"];
+
+                })
                     setAreas(new_areas)
                 })
         })();
@@ -88,6 +133,10 @@ const Map = (props) => {
     }, []);
 
 
+    let mapData;
+    mapData = props.mapType === 'pro' ?
+        revenueData : generalData
+        
   const generalLayerStyle = {
     id: "area",
     type: "fill",
@@ -197,7 +246,7 @@ const Map = (props) => {
     
     </ReactMapGL>
         {showPopup && regionalDash && <Dashboard type="region" mapType={props.mapType} data={regionalDash} />}
-        {mapData.length !== 0 &&  <Dashboard type="total" mapType={props.mapType} data={mapData[0]} />}
+        {mapData && mapData.length !== 0 &&  <Dashboard type="total" mapType={props.mapType} data={mapData[0]} />}
     </>
     );
 }
