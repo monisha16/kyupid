@@ -3,7 +3,6 @@ import axios from 'axios';
 import ReactMapGL, { Source, Layer} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
 import Dashboard from '../Dashboard/Dashboard';
-import Range from '../Range/Range';
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
