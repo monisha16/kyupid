@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useMemo} from 'react';
 import axios from 'axios';
 import ReactMapGL, { Source, Layer} from "react-map-gl";
 import mapboxgl from 'mapbox-gl';
@@ -17,16 +17,19 @@ const Map = (props) => {
         width: window.innerWidth,
         height: window.innerHeight,
         minZoom: 10,
-        maxZoom: 10.8,
+        maxZoom: 10.8, 
         pitch: 40,
-        bearing: 340,        
+        bearing: 340,  
     });
+    const [highlightArea, setHighlightArea] = useState(false)
     const [revenueData, setRevenueData] =  useState();
     const [generalData, setGeneralData] = useState();
     const [areas, setAreas] = useState();
     const [showPopup, togglePopup] = useState(false);
     // const [popData, setPopData] = useState(null);
     const [regionalDash, setRegionalDash] = useState(null);
+
+    
 
     useEffect(() => {
 
@@ -169,6 +172,7 @@ const Map = (props) => {
         id: "area",
         type: "fill",
         paint: {
+            // "fill-opacity": 0.7,
             "fill-outline-color": "rgb(52,51,50)", //#191a1a
             'fill-color': {
                     property : 'totalProUsers',
@@ -187,69 +191,77 @@ const Map = (props) => {
                     '#723122']
                     ]
             }
-        }
+        },
         
     };
-  
+
+    const highlightLayerStyle = {
+        id: "area_highlight",
+        type: "fill",
+        paint: {
+            "fill-opacity": .4,
+            // "fill-outline-color": "rgb(52,51,50)", //#191a1a
+            // 'fill-color':  '#a8a8a8',
+            'fill-color': 'white',
+        },
+    };
+    
+
+    function getCursor({ isHovering, isDragging }) {
+        return isDragging ? 'grabbing' : isHovering ? 'pointer' : 'default';
+    }
+    const selectedArea = (regionalDash && regionalDash.area_id) || '';
+    const filter = useMemo(() => ['in', 'area_id', selectedArea], [selectedArea]);
+
+
   return (
       <>
     <ReactMapGL
         doubleClickZoom={false}
         {...viewport}
+        getCursor={getCursor}
+        dragRotate={false}
         onViewportChange={(newviewport) => setViewport(newviewport)}
         mapStyle={"mapbox://styles/mapbox/dark-v9"}
         mapboxApiAccessToken={
             "pk.eyJ1Ijoibml0ZXNoc2g0cm1hIiwiYSI6ImNreHE4ZzJzdDFlYjMycHA3bXphYno3emcifQ.G690vt5K8bxhpPpyGLOEMA"
         }
+
         onHover={(e) => {
             if (e?.features[0]?.properties?.area_id) {
-            // const userdata = getDetails(e.features[0].properties.area_id);
-            let area_id = e.features[0].properties.area_id;
-            setRegionalDash({
-                female: mapData[area_id].female,
-                male: mapData[area_id].male,
-                totalUsers: mapData[area_id].totalUsers,
-                totalMatches: mapData[area_id].total_matches,
-                type:"region",
-                areaName: e.features[0].properties.name,
-                revPercentage: mapData[area_id].revPercentage,
-            })
-            // setPopData({
-            //     longitude: e.lngLat[0],
-            //     latitude: e.lngLat[1],
-            //     data: {
-            //         name: e.features[0].properties.name,
-            //         users: mapData[area_id].totalUsers 
-            //     }
-            // });
-           togglePopup(true);
-        }
-        
-        else{
-              togglePopup(false);
-        }
-      }}
+
+                let area_id = e.features[0].properties.area_id;
+                setRegionalDash({
+                    female: mapData[area_id].female,
+                    male: mapData[area_id].male,
+                    totalUsers: mapData[area_id].totalUsers,
+                    totalMatches: mapData[area_id].total_matches,
+                    type: "region",
+                    areaName: e.features[0].properties.name,
+                    revPercentage: mapData[area_id].revPercentage,
+                    area_id: area_id,
+                })
+
+                setHighlightArea(true);
+
+                togglePopup(true);
+            }
+
+            else {
+                setHighlightArea(false);
+                togglePopup(false);
+            }
+        }}
     >
-      {areas && 
-        (<Source id="my-data" type="geojson" data={areas}>
-        {props.mapType === "pro" ? <Layer {...proLayerStyle} /> : <Layer {...generalLayerStyle} />}
-          {/* {showPopup && (
-            <Popup                              
-              latitude={popData.latitude}
-              longitude={popData.longitude}
-              closeButton={false}
-            //   closeOnClick={false}
-            //   onClose={() => togglePopup(false)}
-              anchor="top"
-            >
-            <div className={styles['popup']}>
-                <div className={styles['popup__heading']}>{`${popData.data.name}`}</div>
-                <div className={styles['popup__text']}>{`Total Users - ${popData.data.users}`}</div>
-            </div>
-            </Popup>
-          )} */}
+      {areas && <Source id="my-data" type="geojson" data={areas}>
+        {props.mapType === "pro" ? <Layer {...proLayerStyle}  />
+        : 
+            <Layer {...generalLayerStyle}  />
+        }
+        {highlightArea && <Layer {...highlightLayerStyle} filter={filter} />}
+          
         </Source>
-      )}
+      }
     
     </ReactMapGL>
         {showPopup && regionalDash && <Dashboard type="region" mapType={props.mapType} data={regionalDash} />}

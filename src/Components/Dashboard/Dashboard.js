@@ -13,6 +13,8 @@ const Dashboard = ({type, data, mapType}) => {
                             <>
                                 <div className={styles['percentage__title']}> Total Revenue </div>
                                 <div style={{color: '#F2F12D'}} className={styles['percentage__number']}><Countup  end={data.totalRevPercentage}/>%</div>
+                                <div className={styles['percentage__subtext']}> Pro Users </div>
+                                    <div className={styles['percentage__subtext']}><em> ({data.totalUsers})</em> </div>
                                 
                             </>
                             :

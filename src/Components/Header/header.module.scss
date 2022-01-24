@@ -1,16 +1,17 @@
 .header
 {
     display: flex;
-    position: absolute;
+    position: fixed;
     top: 1rem;
     right: 1rem;
     margin: 5px;
-    background-color: #191a1a;
+    // background-color: #191a1a;
+    background:linear-gradient(214deg, #191a1a, #202020, #333);
     height: 5rem;
     z-index: 1 !important;
     padding: 6px;
     width: 8rem;
-    border-radius: 1rem;
+    border-radius: .5rem;
     box-shadow: 0 15px 15px #191a1a91;
     justify-content: center;
     align-items: center;
