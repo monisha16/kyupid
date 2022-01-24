@@ -14,13 +14,13 @@ const Dashboard = ({type, data, mapType}) => {
                                 <div className={styles['percentage__title']}> Total Revenue </div>
                                 <div style={{color: '#F2F12D'}} className={styles['percentage__number']}><Countup  end={data.totalRevPercentage}/>%</div>
                                 <div className={styles['percentage__subtext']}> Pro Users </div>
-                                    <div className={styles['percentage__subtext']}><em> ({data.totalUsers})</em> </div>
+                                <div className={styles['percentage__subtext']}><em> ({data.totalUsers})</em> </div>
                                 
                             </>
                             :
                             <>
                                 <div  className={styles['percentage__title']}> Total Users </div>
-                                <Countup style={{ color: '#94f80b' }} className={styles['percentage__number']} end={data.totalUsers} />{/* <div id='counter' data-target={data.totalUsers} className={styles['percentage__number']}></div> */}
+                                <Countup style={{ color: '#94f80b' }} className={styles['percentage__number']} end={data.totalUsers} />
                             </>
                             }
                     </div>
@@ -49,42 +49,42 @@ const Dashboard = ({type, data, mapType}) => {
             </>
             :
             <>
-                    <div className={styles['region-container']}>
-                        <div className={styles['area-name']}>{data.areaName}</div>
-                        {mapType === 'pro' ?
-                            <>
-                                <div className={styles['rev-percentage']}>
-                                    <div style={{ color: 'rgb(217 155 32)' }} className={styles['rev-percentage__number']}>{data.revPercentage}% </div>
-                                    <div className={styles['rev-percentage__text']}>revenue</div>
-                                </div>
-                            </>
-                            :
-                            <>
-                                <div className={styles['rev-percentage']}>
-                                    <div style={{ color: 'rgb(82 195 39)' }} className={styles['rev-percentage__number']} >{data.totalUsers}</div>
-                                    <div className={styles['rev-percentage__text']}> Users </div>                                    
-                                </div>
-                                
-                            </>
-                        }
-                        <div className={styles['region-info-container']}>
-                            <div className={styles['region-info']}>
-                                <div className={styles['region-info__text']}>Female Users:</div>
-                                <div style={mapType === 'pro' ? { color: '#F2F12D' } : { color: '#94f80b' }}
-                                 className={styles['region-info__number']}>{data.female}</div>
+                <div className={styles['region-container']}>
+                    <div className={styles['area-name']}>{data.areaName}</div>
+                    {mapType === 'pro' ?
+                        <>
+                            <div className={styles['rev-percentage']}>
+                                <div style={{ color: 'rgb(217 155 32)' }} className={styles['rev-percentage__number']}>{data.revPercentage}% </div>
+                                <div className={styles['rev-percentage__text']}>revenue</div>
                             </div>
-                            <div className={styles['region-info']}>
-                                <div className={styles['region-info__text']}>Male Users:</div>
-                                <div style={mapType === 'pro' ? { color: '#F2F12D' } : { color: '#94f80b' }}
-                                className={styles['region-info__number']}>{data.male}</div>
+                        </>
+                        :
+                        <>
+                            <div className={styles['rev-percentage']}>
+                                <div style={{ color: 'rgb(82 195 39)' }} className={styles['rev-percentage__number']} >{data.totalUsers}</div>
+                                <div className={styles['rev-percentage__text']}> Users </div>                                    
                             </div>
-                            <div className={styles['region-info']}>
-                                <div className={styles['region-info__text']}>Matches:</div>
-                                <div style={mapType === 'pro' ? { color: '#F2F12D' } : { color: '#94f80b' }}
-                                className={styles['region-info__number']}>{data.totalMatches}</div>
-                            </div>
+                            
+                        </>
+                    }
+                    <div className={styles['region-info-container']}>
+                        <div className={styles['region-info']}>
+                            <div className={styles['region-info__text']}>Female Users:</div>
+                            <div style={mapType === 'pro' ? { color: '#F2F12D' } : { color: '#94f80b' }}
+                                className={styles['region-info__number']}>{data.female}</div>
+                        </div>
+                        <div className={styles['region-info']}>
+                            <div className={styles['region-info__text']}>Male Users:</div>
+                            <div style={mapType === 'pro' ? { color: '#F2F12D' } : { color: '#94f80b' }}
+                            className={styles['region-info__number']}>{data.male}</div>
+                        </div>
+                        <div className={styles['region-info']}>
+                            <div className={styles['region-info__text']}>Matches:</div>
+                            <div style={mapType === 'pro' ? { color: '#F2F12D' } : { color: '#94f80b' }}
+                            className={styles['region-info__number']}>{data.totalMatches}</div>
                         </div>
                     </div>
+                </div>
             </>
             }
         </>
