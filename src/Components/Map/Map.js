@@ -18,7 +18,8 @@ const Map = (props) => {
         height: window.innerHeight,
         minZoom: 10,
         maxZoom: 10.8, 
-        pitch: 40,
+        // pitch: 40,
+        pitch:45,
         bearing: 340,  
     });
     const [revenueData, setRevenueData] =  useState();
@@ -118,7 +119,6 @@ const Map = (props) => {
                     "female": totalFemaleUsers,
                     "total_matches": totalMatches
                 }
-
                 setRevenueData(revenueData);
                 setGeneralData(generalData);
             })
@@ -165,30 +165,57 @@ const Map = (props) => {
     const proLayerStyle = {
         id: "area",
         type: "fill",
+        source:"my-data",
         paint: {
-            // "fill-opacity": 0.7,
+            // // "fill-opacity": 0.7,
             "fill-outline-color": "rgb(52,51,50)", 
             'fill-color': {
                 property : 'totalProUsers',
-                stops:  [
-                        [0,'#F2F12D'],
-                        [50,'#EED322'],
-                        [80,'#DA9C20'],
-                        [120,'#B86B25'],
-                        [160,'#8B4225'],
-                        [200,'#723122'],
-                        [260,'#fc3401']
+                stops: [
+                    [0,'#F2F12D'],
+                    [50,'#EED322'],
+                    [80,'#DA9C20'],
+                    [120,'#B86B25'],
+                    [160,'#8B4225'],
+                    [200,'#723122'],
+                    [260,'#fc3401']
                 ]
-            }
+            },            
         },
     };
 
     const highlightLayerStyle = {
         id: "area_highlight",
-        type: "fill",
+        type: "fill-extrusion",
         paint: {
-            "fill-opacity": .4,
-            'fill-color': 'white',
+            'fill-extrusion-color': 
+            props.mapType === "pro" ?
+            {
+                property: 'totalProUsers',
+                stops: [
+                    [0, '#F2F12D'],
+                    [50, '#EED322'],
+                    [80, '#DA9C20'],
+                    [120, '#B86B25'],
+                    [160, '#8B4225'],
+                    [200, '#723122'],
+                    [260, '#fc3401']
+                ]
+            } :
+            {
+                property: 'totalGeneralUsers',
+                stops: [
+                    [90, "#94f80b"],
+                    [120, "#93ff00"],
+                    [150, "#75e41c"],
+                    [180, '#54c527'],
+                    [220, "#40b02a"],
+                    [250, "#2c9b2a"],
+                    [280, "#198729"],
+                    [300, "#047326"]
+                ]
+            },
+            'fill-extrusion-height' : 1000,
         },
     };
     
@@ -236,7 +263,7 @@ const Map = (props) => {
     >
         {areas && 
             <Source id="my-data" type="geojson" data={areas}>
-                {props.mapType === "pro" ? <Layer {...proLayerStyle}  />
+                        {props.mapType === "pro" ? <Layer {...proLayerStyle} />
                     : <Layer {...generalLayerStyle}  />
                 }
                 {showPopup && <Layer {...highlightLayerStyle} filter={filter} />}
