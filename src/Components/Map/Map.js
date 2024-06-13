@@ -20,7 +20,6 @@ const Map = (props) => {
     height: window.innerHeight,
     minZoom: 10,
     maxZoom: 10.8,
-    pitch: 40,
     pitch: 45,
     bearing: 340,
   });
